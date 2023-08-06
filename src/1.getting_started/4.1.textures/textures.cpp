@@ -1,138 +1,138 @@
-#include <glad/glad.h>
+ï»¿#include <glad/glad.h>
 #include <stb_image.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 
 struct RenderData {
-    GLFWwindow* window;   // ´°¿ÚÖ¸Õë
-    GLuint fbo;           // Ö¡»º³å¶ÔÏó£¨FrameBuffer Object£©ID
-    GLuint texture;       // ÎÆÀíID
-    int imageWidth;       // Í¼Ïñ¿í¶È
-    int imageHeight;      // Í¼Ïñ¸ß¶È
+	GLFWwindow* window;   // çª—å£æŒ‡é’ˆ
+	GLuint fbo;           // å¸§ç¼“å†²å¯¹è±¡ï¼ˆFrameBuffer Objectï¼‰ID
+	GLuint texture;       // çº¹ç†ID
+	int imageWidth;       // å›¾åƒå®½åº¦
+	int imageHeight;      // å›¾åƒé«˜åº¦
 };
 
-// ¼ÓÔØÍ¼Ïñ²¢´´½¨ÎÆÀí
+// åŠ è½½å›¾åƒå¹¶åˆ›å»ºçº¹ç†
 void loadTexture(RenderData& renderData, const char* imagePath)
 {
-    int width, height, channels;
-    unsigned char* image = stbi_load(imagePath, &width, &height, &channels, 3);
+	int width, height, channels;
+	unsigned char* image = stbi_load(imagePath, &width, &height, &channels, 3);
 
-    if (!image) {
-        std::cerr << "ÎŞ·¨¼ÓÔØÍ¼Ïñ£º" << imagePath << std::endl;
-        return;
-    }
+	if (!image) {
+		std::cerr << "æ— æ³•åŠ è½½å›¾åƒï¼š" << imagePath << std::endl;
+		return;
+	}
 
-    renderData.imageWidth = width;
-    renderData.imageHeight = height;
+	renderData.imageWidth = width;
+	renderData.imageHeight = height;
 
-    glGenTextures(1, &renderData.texture);
-    glBindTexture(GL_TEXTURE_2D, renderData.texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
+	glGenTextures(1, &renderData.texture);
+	glBindTexture(GL_TEXTURE_2D, renderData.texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
-    stbi_image_free(image);
+	stbi_image_free(image);
 }
 
-// äÖÈ¾³¡¾°µ½FBOÖĞ
+// æ¸²æŸ“åœºæ™¯åˆ°FBOä¸­
 void renderScene(RenderData& renderData)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, renderData.fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, renderData.fbo);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, renderData.texture);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, renderData.texture);
 
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-    glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
-    glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
-    glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
-    glEnd();
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
+	glEnd();
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_TEXTURE_2D);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, renderData.texture);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, renderData.texture);
 
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-    glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
-    glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
-    glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
-    glEnd();
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
+	glEnd();
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_TEXTURE_2D);
 
-    glfwSwapBuffers(renderData.window);
+	glfwSwapBuffers(renderData.window);
 }
 
-// ³õÊ¼»¯OpenGLºÍ´°¿Ú
+// åˆå§‹åŒ–OpenGLå’Œçª—å£
 void initialize(RenderData& renderData)
 {
-    if (!glfwInit())
-    {
-        std::cerr << "GLFW³õÊ¼»¯Ê§°Ü£¡" << std::endl;
-        exit(EXIT_FAILURE);
-    }
+	if (!glfwInit())
+	{
+		std::cerr << "GLFWåˆå§‹åŒ–å¤±è´¥ï¼" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
-    // ´´½¨´°¿Ú
-    renderData.window = glfwCreateWindow(512, 512, "OpenGL FBO Image Display", NULL, NULL);
-    if (!renderData.window)
-    {
-        std::cerr << "´°¿Ú´´½¨Ê§°Ü£¡" << std::endl;
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
+	// åˆ›å»ºçª—å£
+	renderData.window = glfwCreateWindow(512, 512, "OpenGL FBO Image Display", NULL, NULL);
+	if (!renderData.window)
+	{
+		std::cerr << "çª—å£åˆ›å»ºå¤±è´¥ï¼" << std::endl;
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
 
-    glfwMakeContextCurrent(renderData.window);
+	glfwMakeContextCurrent(renderData.window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cerr << "ÎŞ·¨³õÊ¼»¯glad£¡" << std::endl;
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cerr << "æ— æ³•åˆå§‹åŒ–gladï¼" << std::endl;
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
 
-    const char* imagePath = "C://Users//mazhy//Pictures//testfbo.jpg";
-    loadTexture(renderData, imagePath);
+	const char* imagePath = "C://Users//mazhy//Pictures//testfbo.jpg";
+	loadTexture(renderData, imagePath);
 
-    glGenFramebuffers(1, &renderData.fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, renderData.fbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderData.texture, 0);
+	glGenFramebuffers(1, &renderData.fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, renderData.fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderData.texture, 0);
 
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (status != GL_FRAMEBUFFER_COMPLETE)
-    {
-        std::cerr << "FBO´´½¨Ê§°Ü£¡" << std::endl;
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+		std::cerr << "FBOåˆ›å»ºå¤±è´¥ï¼" << std::endl;
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 int main()
 {
-    RenderData renderData;
-    initialize(renderData);
+	RenderData renderData;
+	initialize(renderData);
 
-    while (!glfwWindowShouldClose(renderData.window))
-    {
-        renderScene(renderData);
-        glfwPollEvents();
-    }
+	while (!glfwWindowShouldClose(renderData.window))
+	{
+		renderScene(renderData);
+		glfwPollEvents();
+	}
 
-    glfwTerminate();
-    return 0;
+	glfwTerminate();
+	return 0;
 }
